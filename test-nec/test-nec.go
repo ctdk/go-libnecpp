@@ -9,7 +9,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/ctdk/go-necpp/libnecpp"
+	"github.com/ctdk/go-libnecpp"
 )
 
 func main() {
@@ -34,8 +34,8 @@ func simpleExample() {
 	}
 	defer n.Delete()
 
-	fmt.Printf("simple antenna example")
-	fmt.Printf("----------------------")
+	fmt.Println("simple antenna example")
+	fmt.Println("----------------------")
 
 	// skipping err checks here because it's a) an example and b) this very
 	// same antenna is tested in the go tests in libnecpp/necpp_test.go
