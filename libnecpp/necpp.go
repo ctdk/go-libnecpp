@@ -12,7 +12,8 @@ import (
 	"strings"
 )
 
-// GainErrno
+// GainErrno is the number returned by the Gain* functions when no radiation
+// pattern was previously requested.
 const GainErrno float64 = -999.0
 
 var ErrNoPatternRequested = errors.New("no radiation pattern previously requested")
@@ -26,6 +27,29 @@ const (
 	Rectangular 
 	Triangular 
 	Quadrilateral
+)
+
+// GroundPlaneFlag is used to indicate the type of ground plane to use with the
+// antenna when indicating the geometry is complete.
+type GroundPlaneFlag int
+
+// Indicate the type of ground plane to use. The options are:
+//
+// • NoGroundPlane - no ground plane is present. (Fairly self-explanatory.)
+//
+// • CurrentExpansionModified - Structure symmetry is modified as required, and
+// the current expansion is modified so that the currents and segments touching
+// the ground (x, Y plane) are interpolated to their images below the ground
+// (charge at base is zero)
+//
+// • CurrentExpansionUnmodified - indicates a ground is present. Structure 
+// symmetry is modified as required. Current expansion, however, is not 
+// modified, Thus, currents on segments touching the ground will go to zero at
+// the ground.
+const (
+	NoGroundPlane = GroundPlaneFlag(0)
+	CurrentExpansionModified = GroundPlaneFlag(1)
+	CurrentExpansionUnmodified = GroundPlaneFlag(-1)
 )
 
 type NecppCtx struct {
@@ -200,8 +224,8 @@ func (n *NecppCtx) GxCard(i1 int, i2 int) error {
 	return n.errWrap(C.nec_gx_card(n.necContext, C.int(i1), C.int(i2)))
 }
 
-func (n *NecppCtx) GeometryComplete(gplfag int) error {
-	return n.errWrap(C.nec_geometry_complete(n.necContext, C.int(gplfag)))
+func (n *NecppCtx) GeometryComplete(gpflag GroundPlaneFlag) error {
+	return n.errWrap(C.nec_geometry_complete(n.necContext, C.int(gpflag)))
 }
 
 // antenna environment methods
