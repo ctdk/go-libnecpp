@@ -6,10 +6,11 @@ import (
 )
 
 func TestNecCtxCreate(t *testing.T) {
-	_, err := New()
+	n, err := New()
 	if err != nil {
 		t.Error(err)
 	}
+	n.Delete()
 }
 
 func TestNecCtxDeletion(t *testing.T) {
@@ -27,6 +28,8 @@ func TestSimpleAntenna(t *testing.T) {
 	var expSd float64 = 16.108163
 
 	n, _ := New()
+	defer n.Delete()
+
 	err := n.Wire(0, 9, 0, 0, 2, 0, 0, 7, 0.1, 1, 1)
 	if err != nil {
 		t.Error(err)
