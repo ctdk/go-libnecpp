@@ -26,7 +26,7 @@ func simpleExample() {
 	    FR 0 1 0 30.
 	    EX 0 5 0 1.
 	    GN 1
-	    RP 0 90 1 0000 0 90 1 0 
+	    RP 0 90 1 0000 0 90 1 0
 	*/
 	n, err := libnecpp.New()
 	if err != nil {
@@ -44,12 +44,12 @@ func simpleExample() {
 	n.GnCard(1, 0, 0, 0, 0, 0, 0, 0)
 	n.FrCard(0, 1, 30, 0)
 	n.ExCard(0, 0, 5, 0, 1.0, 0, 0, 0, 0, 0)
-	n.RpCard(0, 90, 1, 0,5,0,0, 0, 90, 1, 0, 0, 0)
+	n.RpCard(0, 90, 1, 0, 5, 0, 0, 0, 90, 1, 0, 0, 0)
 	max, _ := n.GainMax(0)
 	mean, _ := n.GainMean(0)
 	sd, _ := n.GainSd(0)
 	fmt.Printf("Gain: %f, %f +/- %f dB\n", max, mean, sd)
-	
+
 	maxR, _ := n.GainRhcpMax(0)
 	meanR, _ := n.GainRhcpMean(0)
 	sdR, _ := n.GainRhcpSd(0)

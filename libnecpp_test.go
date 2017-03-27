@@ -50,7 +50,7 @@ func TestSimpleAntenna(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = n.RpCard(0, 90, 1, 0,5,0,0, 0, 90, 1, 0, 0, 0)
+	err = n.RpCard(0, 90, 1, 0, 5, 0, 0, 0, 90, 1, 0, 0, 0)
 	if err != nil {
 		t.Error(err)
 	}
@@ -91,5 +91,5 @@ func TestSimpleAntenna(t *testing.T) {
 
 func roundFloat(n float64, d int) float64 {
 	p := math.Pow(10, float64(d))
-	return float64(int(n * float64(p))) / p
+	return float64(int(n*float64(p))) / p
 }

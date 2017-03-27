@@ -24,14 +24,14 @@ type PatchType int
 // Patch shapes for Surface Patch (SP Card)
 const (
 	Arbitrary = PatchType(iota) // an arbitrary patch shape (the default)
-	Rectangular 
-	Triangular 
+	Rectangular
+	Triangular
 	Quadrilateral
 )
 
-// GroundPlaneFlag is used to indicate the type of ground plane to use with the
-// antenna when indicating the geometry is complete.
-type GroundPlaneFlag int
+// GeoGroundPlaneFlag is used to indicate the type of ground plane to use with
+// the antenna when indicating the geometry is complete.
+type GeoGroundPlaneFlag int
 
 // Indicate the type of ground plane to use. The options are:
 //
@@ -42,14 +42,14 @@ type GroundPlaneFlag int
 // the ground (x, Y plane) are interpolated to their images below the ground
 // (charge at base is zero)
 //
-// • CurrentExpansionUnmodified - indicates a ground is present. Structure 
-// symmetry is modified as required. Current expansion, however, is not 
+// • CurrentExpansionUnmodified - indicates a ground is present. Structure
+// symmetry is modified as required. Current expansion, however, is not
 // modified, Thus, currents on segments touching the ground will go to zero at
 // the ground.
 const (
-	NoGroundPlane = GroundPlaneFlag(0)
-	CurrentExpansionModified = GroundPlaneFlag(1)
-	CurrentExpansionUnmodified = GroundPlaneFlag(-1)
+	NoGroundPlane              = GeoGroundPlaneFlag(0)
+	CurrentExpansionModified   = GeoGroundPlaneFlag(1)
+	CurrentExpansionUnmodified = GeoGroundPlaneFlag(-1)
 )
 
 type NecppCtx struct {
@@ -71,7 +71,7 @@ func New() (*NecppCtx, error) {
 }
 
 // if there's an error message, retrieve it. Only called by the wrapper
-// functions below 
+// functions below
 
 func (n *NecppCtx) errorMessage() error {
 	// doesn't look like this should be freed
@@ -181,7 +181,7 @@ func (n *NecppCtx) ScCard(i2 int, x3 float64, y3 float64, z3 float64, x4 float64
 //	 its   This number is input as a decimal number but is rounded
 //             to an integer before use.  Tag numbers are searched sequentially
 //             until a segment having a tag of this segment through the end of
-//             the sequence of segments is moved by the card.  If ITS is zero 
+//             the sequence of segments is moved by the card.  If ITS is zero
 //             the entire structure is moved.
 func (n *NecppCtx) GmCard(itsi int, nrpt int, rox float64, roy float64, roz float64, xs float64, ys float64, zs float64, its int) error {
 	return n.errWrap(C.nec_gm_card(n.necContext, C.int(itsi), C.int(nrpt), C.double(rox), C.double(roy), C.double(roz), C.double(xs), C.double(ys), C.double(zs), C.int(its)))
@@ -200,24 +200,24 @@ func (n *NecppCtx) GmCard(itsi int, nrpt int, rox float64, roy float64, roz floa
         A zero or blank in any of these columns causes the corres-
         ponding reflection to be skipped.
 
-Any combination of reflections along the X, Y and Z axes may be used. 
+Any combination of reflections along the X, Y and Z axes may be used.
 For example, 101 for i2 will cause reflection along axes X and Z, and 111 will
-cause reflection along axes X, Y and Z. When combinations of reflections are requested, 
-the reflections are done in reverse alphabetical order. That is, if a structure is 
-generated in a single octant of space and a GX card is then read with i2 equal to 111, 
-the structure is first reflected along the Z-axis; the structure and its image are 
-then reflected along the Y-axis; and, finally, these four structures are reflected 
-along the X-axis to fill all octants. This order determines the position of a segment 
+cause reflection along axes X, Y and Z. When combinations of reflections are requested,
+the reflections are done in reverse alphabetical order. That is, if a structure is
+generated in a single octant of space and a GX card is then read with i2 equal to 111,
+the structure is first reflected along the Z-axis; the structure and its image are
+then reflected along the Y-axis; and, finally, these four structures are reflected
+along the X-axis to fill all octants. This order determines the position of a segment
 in the sequence and, hence, the absolute segment numbers.
 
-The tag increment i1 is used to avoid duplication of tag numbers in the image 
+The tag increment i1 is used to avoid duplication of tag numbers in the image
 segments. All valid tags on the original structure are incremented by i1 on the image.
-When combinations of reflections are employed, the tag increment is doubled after each 
-reflection. Thus, a tag increment greater than or equal to the largest tag an the 
-original structure will ensure that no duplicate tags are generated. For example, 
-if tags from 1 to 100 are used on the original structure with i2 equal to 011 and 
-a tag increment of 100, the first reflection, along the Z-axis, will produce tags 
-from 101 to 200; and the second reflection, along the Y-axis, will produce tags 
+When combinations of reflections are employed, the tag increment is doubled after each
+reflection. Thus, a tag increment greater than or equal to the largest tag an the
+original structure will ensure that no duplicate tags are generated. For example,
+if tags from 1 to 100 are used on the original structure with i2 equal to 011 and
+a tag increment of 100, the first reflection, along the Z-axis, will produce tags
+from 101 to 200; and the second reflection, along the Y-axis, will produce tags
 rom 201 to 400, as a result of the increment being doubled to 200.
 */
 func (n *NecppCtx) GxCard(i1 int, i2 int) error {
@@ -232,7 +232,13 @@ func (n *NecppCtx) GeometryComplete(gpflag GroundPlaneFlag) error {
 
 // antenna environment methods
 
-
+// MediumParameters sets the permittivity and permeability of the medium.
+//
+// Parameters:
+// 	permittivity - The electric permittivity of the medium (in farads per
+// 		meter)
+// 	permeability - The magnetic permeability of the medium (in henries per
+// 		meter)
 func (n *NecppCtx) MediumParameters(permittivity float64, permeability float64) error {
 	return n.errWrap(C.nec_medium_parameters(n.necContext, C.double(permittivity), C.double(permeability)))
 }
