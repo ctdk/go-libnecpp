@@ -12,14 +12,29 @@ import (
 	"strings"
 )
 
+// GainErrno
 const GainErrno float64 = -999.0
+
 var ErrNoPatternRequested = errors.New("no radiation pattern previously requested")
 
+// PatchType is the type of patch for the SP card.
+type PatchType int
+
+// Patch shapes for Surface Patch (SP Card)
+const (
+	Arbitrary = PatchType(iota) // an arbitrary patch shape (the default)
+	Rectangular 
+	Triangular 
+	Quadrilateral
+)
 
 type NecppCtx struct {
 	necContext *C.nec_context
 }
 
+// New creates a new NEC context object, which contains the nec_context struct
+// pointer from libnecpp. After it's done being used, call Delete() to free the
+// struct.
 func New() (*NecppCtx, error) {
 	n := new(NecppCtx)
 	nCtx := C.nec_create()
@@ -31,13 +46,30 @@ func New() (*NecppCtx, error) {
 	return n, nil
 }
 
+// if there's an error message, retrieve it. Only called by the wrapper
+// functions below 
+
+func (n *NecppCtx) errorMessage() error {
+	// doesn't look like this should be freed
+	cerr := C.nec_error_message()
+	err := errors.New(C.GoString(cerr))
+	return err
+}
+
+// these functions wrap around the various C functions from libnecpp - if they
+// return a non-zero value, there's been an error of some kind. Get and return
+// that error.
+
 func (n *NecppCtx) errWrap(ret C.long) error {
 	if ret != 0 {
-		err := n.ErrorMessage()
+		err := n.errorMessage()
 		return err
 	}
 	return nil
 }
+
+// the gain functions are a little different, in that they return a meaningful
+// number. If that number is -999.0, though, no radiation pattern as requested.
 
 func (n *NecppCtx) gainErrWrap(gain C.double) (float64, error) {
 	gainRet := float64(gain)
@@ -47,51 +79,123 @@ func (n *NecppCtx) gainErrWrap(gain C.double) (float64, error) {
 	return gainRet, nil
 }
 
+// Delete frees the nec_context struct. Call this after you're finished
+// simulating the antenna.
 func (n *NecppCtx) Delete() error {
-	err := n.errWrap(C.nec_delete(n.necContext))
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (n *NecppCtx) ErrorMessage() error {
-	// doesn't look like this should be freed
-	cerr := C.nec_error_message()
-	err := errors.New(C.GoString(cerr))
-	return err
+	return n.errWrap(C.nec_delete(n.necContext))
 }
 
 // antenna geometry methods
 
+// Wire creates a straight wire. The parameters are:
+//
+// 	tagId: the tag ID
+// 	segmentCount: the number of segments
+// 	xw1 The x coordinate of the wire starting point.
+//	yw1 The y coordinate of the wire starting point.
+//	zw1 The z coordinate of the wire starting point.
+//	xw2 The x coordinate of the wire ending point.
+//	yw2 The y coordinate of the wire ending point.
+//	zw2 The z coordinate of the wire ending point.
+//	rad The wire radius (meters)
+//	rdel For tapered wires, the. Otherwise set to 1.0
+//	rrad For tapered wires, the. Otherwise set to 1.0
+//
+// All co-ordinates are in meters.
 func (n *NecppCtx) Wire(tagId int, segmentCount int, xw1 float64, yw1 float64, zw1 float64, xw2 float64, yw2 float64, zw2 float64, rad float64, rdel float64, rrad float64) error {
-	err := n.errWrap(C.nec_wire(n.necContext, C.int(tagId), C.int(segmentCount), C.double(xw1), C.double(yw1), C.double(zw1), C.double(xw2), C.double(yw2), C.double(zw2), C.double(rad), C.double(rdel), C.double(rrad)))
-	if err != nil {
-		return err
-	}
-	return nil
+	return n.errWrap(C.nec_wire(n.necContext, C.int(tagId), C.int(segmentCount), C.double(xw1), C.double(yw1), C.double(zw1), C.double(xw2), C.double(yw2), C.double(zw2), C.double(rad), C.double(rdel), C.double(rrad)))
 }
 
-func (n *NecppCtx) SpCard(ns int, x1 float64, y1 float64, z1 float64, x2 float64, y2 float64, z2 float64) error {
-	err := n.errWrap(C.nec_sp_card(n.necContext, C.int(ns), C.double(x1), C.double(y1), C.double(z1), C.double(x2), C.double(y2), C.double(z2)))
-	if err != nil {
-		return err
-	}
-	return nil
+// SpCard makes a Surface Patch (SP) card.
+//
+// Parameters:
+// 	ns PatchType - the type of Patch, see those constants
+// 		Arbitrary
+// 		Rectangular
+// 		Triangular
+// 		Quadrilateral
+//	x1 The x coordinate of patch corner1.
+//	y1 The y coordinate of patch corner1.
+//	z1 The z coordinate of patch corner1.
+//	x2 The x coordinate of patch corner2.
+//	y2 The y coordinate of patch corner2.
+//	z2 The z coordinate of patch corner2.
+//
+// All co-ordinates are in meters, except for arbitrary patches where the angles// are in degrees.
+func (n *NecppCtx) SpCard(ns PatchType, x1 float64, y1 float64, z1 float64, x2 float64, y2 float64, z2 float64) error {
+	return n.errWrap(C.nec_sp_card(n.necContext, C.int(ns), C.double(x1), C.double(y1), C.double(z1), C.double(x2), C.double(y2), C.double(z2)))
 }
 
+// ScCard makes a Surface Patch Continuation (SC) card.
+//
+// Parameters:
+//	i2  Weird integer parameter.
+//	x3 The x coordinate of patch corner 3.
+//	y3 The y coordinate of patch corner 3.
+//	z3 The z coordinate of patch corner 3.
+//	x4 The x coordinate of patch corner 4.
+//	y4 The y coordinate of patch corner 4.
+//	z4 The z coordinate of patch corner 4.
+//
+// All co-ordinates are in meters.
 func (n *NecppCtx) ScCard(i2 int, x3 float64, y3 float64, z3 float64, x4 float64, y4 float64, z4 float64) error {
-	err := n.errWrap(C.nec_sc_card(n.necContext, C.int(i2), C.double(x3), C.double(y3), C.double(z3), C.double(x4), C.double(y4), C.double(z4)))
-	if err != nil {
-		return err
-	}
-	return nil
+	return n.errWrap(C.nec_sc_card(n.necContext, C.int(i2), C.double(x3), C.double(y3), C.double(z3), C.double(x4), C.double(y4), C.double(z4)))
 }
 
+// GmCard makes a GM card for Coordinate Transformation
+//
+// Parameters:
+//	 itsi  Tag number increment.
+//	 nprt  The number of new Structures to be generated
+//	 rox   Angle in degrees through which the structure is rotated about
+//             the X-axis.  A positive angle causes a right-hand rotation.
+//	 roy   Angle of rotation about Y-axis.
+//	 roz   Angle of rotation about Z-axis.
+//	 xs    X, Y. Z components of vector by which
+//	 ys    structure is translated with respect to
+//	 zs    the coordinate system.
+//	 its   This number is input as a decimal number but is rounded
+//             to an integer before use.  Tag numbers are searched sequentially
+//             until a segment having a tag of this segment through the end of
+//             the sequence of segments is moved by the card.  If ITS is zero 
+//             the entire structure is moved.
 func (n *NecppCtx) GmCard(itsi int, nrpt int, rox float64, roy float64, roz float64, xs float64, ys float64, zs float64, its int) error {
 	return n.errWrap(C.nec_gm_card(n.necContext, C.int(itsi), C.int(nrpt), C.double(rox), C.double(roy), C.double(roz), C.double(xs), C.double(ys), C.double(zs), C.int(its)))
 }
 
+// GxCard creates a GX card for Reflection in coordinate Planes.
+//
+/* Parameters:
+	i1 - Tag number increment.
+   	i2 - This integer is divided into three independent digits, in
+        columns 8, 9, and 10 of the card, which control reflection
+        in the three orthogonal coordinate planes.  A one in column
+        8 causes reflection along the X-axis (reflection in Y, Z
+        plane); a one in column 9 causes reflection along the Y-axis;
+        and a one in column 10 causes reflection along the Z axis.
+        A zero or blank in any of these columns causes the corres-
+        ponding reflection to be skipped.
+
+Any combination of reflections along the X, Y and Z axes may be used. 
+For example, 101 for i2 will cause reflection along axes X and Z, and 111 will
+cause reflection along axes X, Y and Z. When combinations of reflections are requested, 
+the reflections are done in reverse alphabetical order. That is, if a structure is 
+generated in a single octant of space and a GX card is then read with i2 equal to 111, 
+the structure is first reflected along the Z-axis; the structure and its image are 
+then reflected along the Y-axis; and, finally, these four structures are reflected 
+along the X-axis to fill all octants. This order determines the position of a segment 
+in the sequence and, hence, the absolute segment numbers.
+
+The tag increment i1 is used to avoid duplication of tag numbers in the image 
+segments. All valid tags on the original structure are incremented by i1 on the image.
+When combinations of reflections are employed, the tag increment is doubled after each 
+reflection. Thus, a tag increment greater than or equal to the largest tag an the 
+original structure will ensure that no duplicate tags are generated. For example, 
+if tags from 1 to 100 are used on the original structure with i2 equal to 011 and 
+a tag increment of 100, the first reflection, along the Z-axis, will produce tags 
+from 101 to 200; and the second reflection, along the Y-axis, will produce tags 
+rom 201 to 400, as a result of the increment being doubled to 200.
+*/
 func (n *NecppCtx) GxCard(i1 int, i2 int) error {
 	return n.errWrap(C.nec_gx_card(n.necContext, C.int(i1), C.int(i2)))
 }
@@ -154,6 +258,8 @@ func (n *NecppCtx) GdCard(tmp1 float64, tmp2 float64, tmp3 float64, tmp4 float64
 	return n.errWrap(C.nec_gd_card(n.necContext, C.double(tmp1), C.double(tmp2), C.double(tmp3), C.double(tmp4)))
 }
 
+// simulation output
+
 func (n *NecppCtx) RpCard(calcMode int, nTheta int, nPhi int, outputFormat int, normalization int, d int, a int, theta0 float64, phi0 float64, deltaTheta float64, deltaPhi float64, radialDistance float64, gainNorm float64) error {
 	return n.errWrap(C.nec_rp_card(n.necContext, C.int(calcMode), C.int(nTheta), C.int(nPhi), C.int(outputFormat), C.int(normalization), C.int(d), C.int(a), C.double(theta0), C.double(phi0), C.double(deltaTheta), C.double(deltaPhi), C.double(radialDistance), C.double(gainNorm)))
 }
@@ -185,6 +291,8 @@ func (n *NecppCtx) CpCard(itmp1 int, itmp2 int, itmp3 int, itmp4 int) error {
 func (n *NecppCtx) PlCard(ploutputFilename string, itmp1 int, itmp2 int, itmp3 int, itmp4 int) error {
 	return n.errWrap(C.nec_pl_card(n.necContext, C.CString(ploutputFilename), C.int(itmp1), C.int(itmp2), C.int(itmp3), C.int(itmp4)))
 }
+
+// analysis of output
 
 func (n *NecppCtx) Gain(freqIndex int, thetaIndex int, phiIndex int) (float64, error) {
 	return n.gainErrWrap(C.nec_gain(n.necContext, C.int(freqIndex), C.int(thetaIndex), C.int(phiIndex)))
