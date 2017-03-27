@@ -52,6 +52,16 @@ const (
 	CurrentExpansionUnmodified = GeoGroundPlaneFlag(-1)
 )
 
+// GroundTypeFlag indicates the general type of ground for the antenna.
+GroundTypeFlag int
+
+const (
+	Nullified = GroundTypeFlag(iota - 1)
+	Finite 
+	Perfect
+	FiniteSomNorton
+)
+
 type NecppCtx struct {
 	necContext *C.nec_context
 }
@@ -225,8 +235,8 @@ func (n *NecppCtx) GxCard(i1 int, i2 int) error {
 }
 
 // GeometryComplete indicates the antenna geometry is complete - makes a GE
-// card. See GroundPlaneFlag for details on that parameter.
-func (n *NecppCtx) GeometryComplete(gpflag GroundPlaneFlag) error {
+// card. See GeoGroundPlaneFlag for details on that parameter.
+func (n *NecppCtx) GeometryComplete(gpflag GeoGroundPlaneFlag) error {
 	return n.errWrap(C.nec_geometry_complete(n.necContext, C.int(gpflag)))
 }
 
