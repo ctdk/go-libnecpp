@@ -53,8 +53,15 @@ const (
 )
 
 // GroundTypeFlag indicates the general type of ground for the antenna.
-GroundTypeFlag int
+type GroundTypeFlag int
 
+// Flags for GnCard ground types.
+//
+// • Nullified - Nullifies ground parameters previously used and sets free-space
+// condition. The remainder of the parameters are ignored in this case.
+// • Finite - Finite ground, reflection coefficient approximation.
+// • Perfect - Perfectly conducting ground.
+// • FiniteSomNorton - Finite ground, Sommerfeld/Norton method.
 const (
 	Nullified = GroundTypeFlag(iota - 1)
 	Finite 
@@ -62,6 +69,8 @@ const (
 	FiniteSomNorton
 )
 
+// NecppCtx is the nec context, and contains the libnecpp nec_context struct
+// within itself.
 type NecppCtx struct {
 	necContext *C.nec_context
 }
@@ -253,6 +262,29 @@ func (n *NecppCtx) MediumParameters(permittivity float64, permeability float64) 
 	return n.errWrap(C.nec_medium_parameters(n.necContext, C.double(permittivity), C.double(permeability)))
 }
 
+// GnCard makes a ground card.
+//
+// Examples (TODO: check these examples out more - not sure if they're quite
+// right)
+//
+// 1) Infinite ground plane
+// 	n.GnCard(Perfect, 0, 0, 0, 0, 0, 0, 0)
+// 2) Radial Wire Ground Plane (4 wires, 2 meters long, 5mm in radius)
+// (This is the example I'm unsure of)
+// 	n.GnCard(Finite, 4, 0.0, 0.0, 2.0, 0.005, 0.0, 0.0)
+// 	(example from libnecpp was nec_gn_card(nec, 4, 0, 0.0, 0.0, 2.0, 0.005,
+// 	 0.0, 0.0))
+// 
+// Parameters (some - not all were detailed in the upstream documentation)
+//
+// 	iperf - Ground type flag. See the GroundTypeFlag constants for what
+// 	goes here.
+// 	epse - Relative dielectric constant for ground in the vicinity of the
+// 	antenna. Zero in the case of perfect ground.
+// 	sig - Conductivity in mhos/meter of the ground in the vicinity of the
+// 	antenna. Use zero in the case of a perfect ground. If SIG is input as a
+// 	negative number, the complex dielectric constant Ec = Er -j sigma/omega
+// 	epsilon is set to EPSR - |SIG|.
 func (n *NecppCtx) GnCard(iperf int, nradl int, epse float64, sig float64, tmp3 float64, tmp4 float64, tmp5 float64, tmp6 float64) error {
 	return n.errWrap(C.nec_gn_card(n.necContext, C.int(iperf), C.int(nradl), C.double(epse), C.double(sig), C.double(tmp3), C.double(tmp4), C.double(tmp5), C.double(tmp6)))
 }
