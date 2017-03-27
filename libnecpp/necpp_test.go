@@ -22,10 +22,10 @@ func TestNecCtxDeletion(t *testing.T) {
 }
 
 func TestSimpleAntenna(t *testing.T) {
-	var expMax float64 = 8.409732
+	var expMax float64 = 8.407404
 	var expMin float64 = -999.99
-	var expMean float64 = -1.950829
-	var expSd float64 = 16.107835
+	var expMean float64 = -1.958236
+	var expSd float64 = 16.108163
 
 	n, _ := New()
 	defer n.Delete()
@@ -35,10 +35,6 @@ func TestSimpleAntenna(t *testing.T) {
 		t.Error(err)
 	}
 	err = n.GeometryComplete(CurrentExpansionModified)
-	if err != nil {
-		t.Error(err)
-	}
-	err = n.EkCard(0)
 	if err != nil {
 		t.Error(err)
 	}
