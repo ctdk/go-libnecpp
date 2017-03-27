@@ -224,11 +224,14 @@ func (n *NecppCtx) GxCard(i1 int, i2 int) error {
 	return n.errWrap(C.nec_gx_card(n.necContext, C.int(i1), C.int(i2)))
 }
 
+// GeometryComplete indicates the antenna geometry is complete - makes a GE
+// card. See GroundPlaneFlag for details on that parameter.
 func (n *NecppCtx) GeometryComplete(gpflag GroundPlaneFlag) error {
 	return n.errWrap(C.nec_geometry_complete(n.necContext, C.int(gpflag)))
 }
 
 // antenna environment methods
+
 
 func (n *NecppCtx) MediumParameters(permittivity float64, permeability float64) error {
 	return n.errWrap(C.nec_medium_parameters(n.necContext, C.double(permittivity), C.double(permeability)))
