@@ -47,9 +47,9 @@ type GeoGroundPlaneFlag int
 // modified, Thus, currents on segments touching the ground will go to zero at
 // the ground.
 const (
-	NoGroundPlane              = GeoGroundPlaneFlag(0)
-	CurrentExpansionModified   = GeoGroundPlaneFlag(1)
-	CurrentExpansionUnmodified = GeoGroundPlaneFlag(-1)
+	CurrentExpansionUnmodified = GeoGroundPlaneFlag(iota - 1)
+	NoGroundPlane
+	CurrentExpansionModified
 )
 
 // GroundTypeFlag indicates the general type of ground for the antenna.
@@ -67,6 +67,25 @@ const (
 	Finite 
 	Perfect
 	FiniteSomNorton
+)
+
+// FrequencyRange is used to set the type of frequency range for FR cards.
+type FrequencyRange int
+
+// FrequencyRanges for FrCard.
+const (
+	Linear = FrequencyRange(iota) // a linear range
+	Logarithmic // a logarithmic range
+)
+
+// WireKernel sets the type of wire kernel to use with EkCard
+type WireKernel int
+
+// ReturnToNormal - Return to normal kernel
+// ExtendedThinWire - Use extended thin wire kernel
+const (
+	ReturnToNormal = WireKernel(iota - 1)
+	ExtendedThinWire 
 )
 
 // NecppCtx is the nec context, and contains the libnecpp nec_context struct
@@ -289,14 +308,45 @@ func (n *NecppCtx) GnCard(iperf int, nradl int, epse float64, sig float64, tmp3 
 	return n.errWrap(C.nec_gn_card(n.necContext, C.int(iperf), C.int(nradl), C.double(epse), C.double(sig), C.double(tmp3), C.double(tmp4), C.double(tmp5), C.double(tmp6)))
 }
 
-func (n *NecppCtx) FrCard(inIfrq int, inNfrq int, inFreqMhz float64, inDelFreq float64) error {
+// FrCard makes a FR Card for frequency ranges.
+//
+// Parameters:
+// 	inIfrq - a FrequencyRange constant, Linear or Logarithmic, for linear or
+// 	logarithmic range of frequencies.
+// 	inNfreq - the number of frequencies
+// 	inFreqMhz - the starting frequency in MHz.
+// 	inDelFreq - the frequency step in MHz (for inIfreq == Linear)
+func (n *NecppCtx) FrCard(inIfrq FrequencyRange, inNfrq int, inFreqMhz float64, inDelFreq float64) error {
 	return n.errWrap(C.nec_fr_card(n.necContext, C.int(inIfrq), C.int(inNfrq), C.double(inFreqMhz), C.double(inDelFreq)))
 }
 
+// EkCard controls the use of the external thin-wire kernel approximation.
 func (n *NecppCtx) EkCard(itmp1 int) error {
 	return n.errWrap(C.nec_ek_card(n.necContext, C.int(itmp1)))
 }
 
+// LdCard - loading.
+//
+// Parameters:
+//
+//	ldtyp - Type of loading (5 = segment conductivity)
+//	ldtag - Tag (zero for absolute segment numbers, or in conjunction with 0 for next parameter, for all segments)
+//	ldtagf - Equal to m specifies the mth segment of the set of segments
+// 	whose tag numbers equal the tag number specified in the previous
+// 	parameter. If the previous parameter (LDTAG) is zero, LDTAGF then
+// 	specifies an absolute segment number. If both LDTAG and LDTAGF are zero,
+// 	all segments will be loaded. 
+//	ldtagt - Equal to n specifies the nth segment of the set of segments
+// 	whose tag numbers equal the tag number specified in the parameter LDTAG.
+// 	This parameter must be greater than or equal to	the previous parameter.
+// 	The loading specified is applied to each of the	mth through nth segments
+// 	of the set of segments having tags equal to LDTAG. Again if LDTAG is
+// 	zero, these parameters refer to absolute segment numbers. If LDTAGT is
+// 	left blank, it is set equal to the previous parameter (LDTAGF).
+//	tmp1 Resistance in Ohms, OR (A) Ohms per meter, OR (B) Resistance. OR
+// 	(C) Conductivity (ldtyp=5)
+//	tmp2 IND., HENRY, OR (A) HY/LENGTH OR (B) REACT. OR (C) Set to 0.0
+//	tmp3 CAP,. FARAD, OR (A,B) BLANK (set to 0.0)
 func (n *NecppCtx) LdCard(ldtype int, ldtag int, ldtagf int, ldtagt int, tmp1 float64, tmp2 float64, tmp3 float64) error {
 	return n.errWrap(C.nec_ld_card(n.necContext, C.int(ldtype), C.int(ldtag), C.int(ldtagf), C.int(ldtagt), C.double(tmp1), C.double(tmp2), C.double(tmp3)))
 }
