@@ -28,7 +28,7 @@ func simpleExample() {
 	    GN 1
 	    RP 0 90 1 0000 0 90 1 0
 	*/
-	n, err := libnecpp.New()
+	n, err := necpp.New()
 	if err != nil {
 		panic(err)
 	}
@@ -40,7 +40,7 @@ func simpleExample() {
 	// skipping err checks here because it's a) an example and b) this very
 	// same antenna is tested in the go tests in libnecpp/necpp_test.go
 	n.Wire(0, 9, 0, 0, 2, 0, 0, 7, 0.1, 1, 1)
-	n.GeometryComplete(libnecpp.CurrentExpansionModified)
+	n.GeometryComplete(necpp.CurrentExpansionModified)
 	n.GnCard(1, 0, 0, 0, 0, 0, 0, 0)
 	n.FrCard(0, 1, 30, 0)
 	n.ExCard(0, 0, 5, 0, 1.0, 0, 0, 0, 0, 0)

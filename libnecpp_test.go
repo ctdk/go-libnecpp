@@ -1,4 +1,4 @@
-package libnecpp
+package necpp
 
 import (
 	"math"
