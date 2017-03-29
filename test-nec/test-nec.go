@@ -14,6 +14,7 @@ import (
 
 func main() {
 	simpleExample()
+	example3()
 }
 
 func sevenWireAntenna() {
@@ -58,9 +59,54 @@ func simpleExample() {
 	maxL, _ := n.GainLhcpMax(0)
 	meanL, _ := n.GainLhcpMean(0)
 	sdL, _ := n.GainLhcpSd(0)
-	fmt.Printf("LHCP Gain: %f, %f +/- %f dB\n", maxL, meanL, sdL)
+	fmt.Printf("LHCP Gain: %f, %f +/- %f dB\n\n", maxL, meanL, sdL)
 }
 
 func example3() {
+	/*
+	   CMEXAMPLE 3. VERTICAL HALF WAVELENGTH ANTENNA OVER GROUND
+	   CM           EXTENDED THIN WIRE KERNEL USED
+	   CM           1. PERFECT GROUND
+	   CM           2. IMPERFECT GROUND INCLUDING GROUND WAVE AND RECEIVING
+	   CE              PATTERN CALCULATIONS
+	   GW 0 9 0. 0. 2. 0. 0. 7. .03
+	   GE 1
+	   EK
+	   FR 0 1 0 0 30.
+	   EX 0 0 5 0 1.
+	   GN 1
+	   RP 0 10 2 1301 0. 0. 10. 90.
+	   GN 0 0 0 0 6. 1.000E-03
+	   RP 0 10 2 1301 0. 0. 10. 90.
+	   RP 1 10 1 0 1. 0. 2. 0. 1.000E+05
+	   EX 1 10 1 0 0. 0. 0. 10.
+	   PT 2 0 5 5
+	   XQ
+	   EN
+	*/
 
+	n, err := necpp.New()
+	if err != nil {
+		panic(err)
+	}
+	defer n.Delete()
+
+	fmt.Printf("example3\n----------\n")
+
+	n.Wire(0, 9, 0., 0.0, 2.0, 0.0, 0.0, 7.0, 0.03, 1.0, 1.0)
+	n.GeometryComplete(necpp.CurrentExpansionModified)
+	n.EkCard(necpp.ReturnToNormal)
+	n.FrCard(necpp.Linear, 1, 30.0, 0)
+	n.ExCard(necpp.VoltageApplied, 0, 5, 0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+	n.GnCard(necpp.Perfect, 0, 0, 0, 0, 0, 0, 0)
+	n.RpCard(necpp.Normal, 10, 2, necpp.VerticalHorizontal, necpp.VerticalAxisNorm, necpp.PowerGain, necpp.AvgGain, 0.0, 0.0, 10.0, 90.0, 0, 0)
+
+	imp, _ := n.Impedance(0)
+	fmt.Printf("Impedance: %g\n", imp)
+
+	n.GnCard(necpp.Nullified, 0, 6.0, 1.000E-03, 0.0, 0.0, 0.0, 0.0)
+	n.RpCard(necpp.Normal, 10, 2, necpp.VerticalHorizontal, necpp.VerticalAxisNorm, necpp.PowerGain, necpp.AvgGain, 0.0, 0.0, 10.0, 90.0, 0, 0)
+
+	imp2, _ := n.Impedance(0)
+	fmt.Printf("Impedance 2: %g\n", imp2)
 }
