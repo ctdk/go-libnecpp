@@ -1,6 +1,6 @@
 /*
 Golang example using libnecpp as a library.
- 
+
 This is a translation of the C example in nec++, found at
 https://github.com/tmolteno/necpp/blob/master/example/test_nec.c
 

@@ -144,8 +144,8 @@ type RpAveraging int
 
 // RP card calculation mode constants.
 //
-// • Normal - normal mode. Space-wave fields are computed. An infinite ground 
-// plane is included if it has been specified previously on a GN card; 
+// • Normal - normal mode. Space-wave fields are computed. An infinite ground
+// plane is included if it has been specified previously on a GN card;
 // otherwise, the antenna is in free space.
 //
 // • SurfaceWave - surface wave propagating along ground is added to the normal
@@ -196,13 +196,13 @@ const (
 //
 // • NoNormalization - no normalized gain.
 //
-// • MajorAxisNorm - major axis gain normalized. 
+// • MajorAxisNorm - major axis gain normalized.
 //
-// • MinorAxisNorm - minor axis gain normalized. 
+// • MinorAxisNorm - minor axis gain normalized.
 //
-// • VerticalAxisNorm - vertical axis gain normalized. 
+// • VerticalAxisNorm - vertical axis gain normalized.
 //
-// • HorizontalAxisNorm - horizontal axis gain normalized. 
+// • HorizontalAxisNorm - horizontal axis gain normalized.
 //
 // • TotalNormalized - total gain normalized.
 const (
@@ -642,23 +642,23 @@ func (n *NecppCtx) GdCard(tmp1 float64, tmp2 float64, tmp3 float64, tmp4 float64
 // 	theta0 - Initial theta angle in degrees (initial z coordinate in meters
 // 	if calc_mode = 1).
 // 	phi0 - Initial phi angle in degrees.
-// 	deltaTheta - Increment for theta in degrees (increment for z in meters 
+// 	deltaTheta - Increment for theta in degrees (increment for z in meters
 // 	if calc_mode = 1).
 // 	deltaPhi - Increment for phi in degrees.
-// 	radialDistance - Radial distance (R) of field point from the origin in 
-// 	meters. radial_distance is optional. If it is zero, the radiated 
-// 	electric field will have the factor exp(-jkR)/R omitted. If a value of 
-// 	R is specified, it should represent a point in the far-field region 
+// 	radialDistance - Radial distance (R) of field point from the origin in
+// 	meters. radial_distance is optional. If it is zero, the radiated
+// 	electric field will have the factor exp(-jkR)/R omitted. If a value of
+// 	R is specified, it should represent a point in the far-field region
 // 	since near components of the field cannot be obtained with an RP card.
-// 	(If calc_mode = 1, then radial_distance represents the cylindrical 
-// 	coordinate phi in meters and is not optional. It must be greater than 
+// 	(If calc_mode = 1, then radial_distance represents the cylindrical
+// 	coordinate phi in meters and is not optional. It must be greater than
 // 	about one wavelength.)
 // 	gainNorm - Determines the gain normalization factor if normalization has
-// 	been requested in the normalization parameter. If gain_norm is zero, 
-// 	the gain will be normalized to its maximum value. If gain_norm is not 
+// 	been requested in the normalization parameter. If gain_norm is zero,
+// 	the gain will be normalized to its maximum value. If gain_norm is not
 // 	zero, the gain wi11 be normalized to the value of gain_norm.
 //
-// The field point is specified in spherical coordinates (R, sigma, theta), 
+// The field point is specified in spherical coordinates (R, sigma, theta),
 // except when the surface wave is computed. For computing the surface wave
 // field (calc_mode = l), cylindrical coordinates (phi, theta, z) are used to
 // accurately define points near the ground plane at large radial distances.
@@ -673,17 +673,17 @@ func (n *NecppCtx) GdCard(tmp1 float64, tmp2 float64, tmp3 float64, tmp4 float64
 // The RpCard() method will cause the interaction matrix to be computed and
 // factored and the structure currents to be computed if these operations have
 // not already been performed. Hence, all required input parameters must be set
-// before the RpCard() method is called. 
+// before the RpCard() method is called.
 //
 // At a single frequency, any number of RpCard() calls may occur in sequence so
 // that different field-point spacings may be used over different regions of
 // space. If automatic frequency stepping is being used (i.e., inNfrq on the
 // FrCard() method is greater than one), only one RpCard() method will act as
 // data inside the loop. Subsequent calls to RpCard() will calculate patterns
-// at the final frequency. 
+// at the final frequency.
 //
 // When both nTheta and nPhi are greater than one, the angle theta (or Z) will
-// be stepped faster than phi. 
+// be stepped faster than phi.
 //
 // When a ground plane has been specified, field points should not be requested
 // below the ground (theta greater than 90 degrees or Z less than zero.)
@@ -692,7 +692,7 @@ func (n *NecppCtx) RpCard(calcMode RpCalcMode, nTheta int, nPhi int, outputForma
 }
 
 // PtCard makes a PT Card for printing of currents. This methods documentation
-// needs to be checked against the NEC2 user manual before renaming these 
+// needs to be checked against the NEC2 user manual before renaming these
 // variables and making a new type for a flag. This is what was in libnecpp.h.
 //
 // IPTFLG Print control flag, specifies the type of format used in printing segment currents. The options are:
@@ -701,9 +701,9 @@ func (n *NecppCtx) RpCard(calcMode RpCalcMode, nTheta int, nPhi int, outputForma
 // 	0 - current printing will be limited to the segments specified by the next three parameters.
 // 	1 - currents are printed by using a format designed for a receiving pattern (refer to output section in this manual Only currents for the segments specified by the next three parameters are printed.
 // 	2 - same as for 1 above; in addition, however, the current for one Segment will Cue normalized to its maximum, ant the normalized values along with the relative strength in tB will be printed in a table. If the currents for more than one segment are being printed, only currents from the last segment in the group appear in the normalized table.
-// 	3 - only normalized currents from one segment are printed for the receiving pattern case. 
+// 	3 - only normalized currents from one segment are printed for the receiving pattern case.
 //
-// IPTAG - Tag number of the segments for which currents will be printed. 
+// IPTAG - Tag number of the segments for which currents will be printed.
 //
 // IPTAGF - Equal to m, specifies the mth segment of the set of segments having the tag numbers of IPTAG, at which printing of currents starts. If IPTAG is zero or blank, then IPTAGF refers to an absolute segment number. If IPTAGF is blank, the current is printed for all segments.
 //
