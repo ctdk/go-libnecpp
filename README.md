@@ -34,5 +34,8 @@ This library is licensed under the GPL (since the original libnecpp library is).
 AUTHOR
 ------
 
-The golang libnecpp wrapper was written by Jeremy Bingham (<jeremy@goiarid.gl>).Nec++ was written by Tim Molteno <tim@physics.otago.ac.nz>.
+The golang libnecpp wrapper was written by Jeremy Bingham (<jeremy@goiardi.gl>).
+
+Nec++ was written by Tim Molteno <tim@physics.otago.ac.nz>.
+
 Nec2c (the C port which nec++ was based on) was done by by Neoklis Kyriazis.
