@@ -454,7 +454,7 @@ func (n *NecppCtx) MediumParameters(permittivity float64, permeability float64) 
 // 	antenna. Use zero in the case of a perfect ground. If SIG is input as a
 // 	negative number, the complex dielectric constant Ec = Er -j sigma/omega
 // 	epsilon is set to EPSR - |SIG|.
-func (n *NecppCtx) GnCard(iperf int, nradl int, epse float64, sig float64, tmp3 float64, tmp4 float64, tmp5 float64, tmp6 float64) error {
+func (n *NecppCtx) GnCard(iperf GroundTypeFlag, nradl int, epse float64, sig float64, tmp3 float64, tmp4 float64, tmp5 float64, tmp6 float64) error {
 	return n.errWrap(C.nec_gn_card(n.necContext, C.int(iperf), C.int(nradl), C.double(epse), C.double(sig), C.double(tmp3), C.double(tmp4), C.double(tmp5), C.double(tmp6)))
 }
 
@@ -523,7 +523,7 @@ func (n *NecppCtx) LdCard(ldtype int, ldtag int, ldtagf int, ldtagt int, tmp1 fl
 //
 // Simpler versions of the function are provided for common uses. These are
 // ExcitationVoltage, ExcitationCurrent, and ExcitationPlanewave.
-func (n *NecppCtx) ExCard(extype int, i2 int, i3 int, i4 int, tmp1 float64, tmp2 float64, tmp3 float64, tmp4 float64, tmp5 float64, tmp6 float64) error {
+func (n *NecppCtx) ExCard(extype Excitation, i2 int, i3 int, i4 int, tmp1 float64, tmp2 float64, tmp3 float64, tmp4 float64, tmp5 float64, tmp6 float64) error {
 	return n.errWrap(C.nec_ex_card(n.necContext, C.int(extype), C.int(i2), C.int(i3), C.int(i4), C.double(tmp1), C.double(tmp2), C.double(tmp3), C.double(tmp4), C.double(tmp5), C.double(tmp6)))
 }
 
@@ -660,10 +660,10 @@ func (n *NecppCtx) GdCard(tmp1 float64, tmp2 float64, tmp3 float64, tmp4 float64
 //
 // The field point is specified in spherical coordinates (R, sigma, theta),
 // except when the surface wave is computed. For computing the surface wave
-// field (calc_mode = l), cylindrical coordinates (phi, theta, z) are used to
+// field (calcMode = l), cylindrical coordinates (phi, theta, z) are used to
 // accurately define points near the ground plane at large radial distances.
 //
-// The rp_card() function allows automatic stepping of the field point to
+// The RpCard() function allows automatic stepping of the field point to
 // compute the field over a region about the antenna at uniformly spaced points.
 //
 // The integers nTheta and nPhi, and floating point numbers theta0, phi0,

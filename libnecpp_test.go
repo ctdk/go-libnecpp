@@ -38,19 +38,19 @@ func TestSimpleAntenna(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	err = n.GnCard(1, 0, 0, 0, 0, 0, 0, 0)
+	err = n.GnCard(Perfect, 0, 0, 0, 0, 0, 0, 0)
 	if err != nil {
 		t.Error(err)
 	}
-	err = n.FrCard(0, 1, 30, 0)
+	err = n.FrCard(Linear, 1, 30, 0)
 	if err != nil {
 		t.Error(err)
 	}
-	err = n.ExCard(0, 0, 5, 0, 1.0, 0, 0, 0, 0, 0)
+	err = n.ExCard(VoltageApplied, 0, 5, 0, 1.0, 0, 0, 0, 0, 0)
 	if err != nil {
 		t.Error(err)
 	}
-	err = n.RpCard(0, 90, 1, 0, 5, 0, 0, 0, 90, 1, 0, 0, 0)
+	err = n.RpCard(Normal, 90, 1, MajorMinor, TotalNormalized, PowerGain, NoAvg, 0, 90, 1, 0, 0, 0)
 	if err != nil {
 		t.Error(err)
 	}
