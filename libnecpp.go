@@ -64,7 +64,7 @@ type GroundTypeFlag int
 // • FiniteSomNorton - Finite ground, Sommerfeld/Norton method.
 const (
 	Nullified = GroundTypeFlag(iota - 1)
-	Finite 
+	Finite
 	Perfect
 	FiniteSomNorton
 )
@@ -74,8 +74,8 @@ type FrequencyRange int
 
 // FrequencyRanges for FrCard.
 const (
-	Linear = FrequencyRange(iota) // a linear range
-	Logarithmic // a logarithmic range
+	Linear      = FrequencyRange(iota) // a linear range
+	Logarithmic                        // a logarithmic range
 )
 
 // WireKernel sets the type of wire kernel to use with EkCard
@@ -85,20 +85,20 @@ type WireKernel int
 // ExtendedThinWire - Use extended thin wire kernel
 const (
 	ReturnToNormal = WireKernel(iota - 1)
-	ExtendedThinWire 
+	ExtendedThinWire
 )
 
 // Excitation sets the type of excitation for ExCard
 type Excitation int
 
 // Types of excitation that can be supplied to ExCard
-const(
-	VoltageApplied = Excitation(iota) // voltage source (applied-E-field source)
-	IncidentLinear // incident plane wave, linear polarization.
-	IncidentRightHand // incident plane wave, right-hand (thumb along the incident k vector) elliptic polarization.
-	IncidentLeftHand // incident plane wave, left-hand elliptic polarization.
-	Elementary // elementary current source
-	VoltageSlope // voltage source (current-slope-discontinuity)
+const (
+	VoltageApplied    = Excitation(iota) // voltage source (applied-E-field source)
+	IncidentLinear                       // incident plane wave, linear polarization.
+	IncidentRightHand                    // incident plane wave, right-hand (thumb along the incident k vector) elliptic polarization.
+	IncidentLeftHand                     // incident plane wave, left-hand elliptic polarization.
+	Elementary                           // elementary current source
+	VoltageSlope                         // voltage source (current-slope-discontinuity)
 )
 
 // ExecutionOption control the generation of radiation patterns with XqCard()
@@ -324,7 +324,7 @@ func (n *NecppCtx) MediumParameters(permittivity float64, permeability float64) 
 // 	n.GnCard(Finite, 4, 0.0, 0.0, 2.0, 0.005, 0.0, 0.0)
 // 	(example from libnecpp was nec_gn_card(nec, 4, 0, 0.0, 0.0, 2.0, 0.005,
 // 	 0.0, 0.0))
-// 
+//
 // Parameters (some - not all were detailed in the upstream documentation)
 //
 // 	iperf - Ground type flag. See the GroundTypeFlag constants for what
@@ -366,7 +366,7 @@ func (n *NecppCtx) EkCard(itmp1 WireKernel) error {
 // 	whose tag numbers equal the tag number specified in the previous
 // 	parameter. If the previous parameter (LDTAG) is zero, LDTAGF then
 // 	specifies an absolute segment number. If both LDTAG and LDTAGF are zero,
-// 	all segments will be loaded. 
+// 	all segments will be loaded.
 //	ldtagt - Equal to n specifies the nth segment of the set of segments
 // 	whose tag numbers equal the tag number specified in the parameter LDTAG.
 // 	This parameter must be greater than or equal to	the previous parameter.
@@ -390,18 +390,18 @@ func (n *NecppCtx) LdCard(ldtype int, ldtag int, ldtagf int, ldtagt int, tmp1 fl
 // 		or VoltageSlope
 // 	i2 - Tag number the source segment. This tag number along with the
 // 	number to be given in (i3), which identifies the position of the
-// 	segment in a set of equal tag numbers, uniquely definer the source 
-// 	segment. A 0 in field i2 implies that the Source segment will be 
+// 	segment in a set of equal tag numbers, uniquely definer the source
+// 	segment. A 0 in field i2 implies that the Source segment will be
 // 	identified by using the absolute segment number in the next field (i3).
-// 	i3 - Equal to m, specifies the mth segment of the set of segments whose 
-// 	tag numbers are equal to the number set by the previous parameter. If 
-// 	the previous parameter is zero, the number in (i3) must be the absolute 
-// 	segment number of the source. 
+// 	i3 - Equal to m, specifies the mth segment of the set of segments whose
+// 	tag numbers are equal to the number set by the previous parameter. If
+// 	the previous parameter is zero, the number in (i3) must be the absolute
+// 	segment number of the source.
 // 	i4 -  Meaning Depends on the extype parameter. See http://www.nec2.org/part_3/cards/ex.html
 //
-// 	The meaning of the floating point parameter depends on the excitation 
+// 	The meaning of the floating point parameter depends on the excitation
 // type. See http://www.nec2.org/part_3/cards/ex.html for more details.
-// 
+//
 // Simpler versions of the function are provided for common uses. These are
 // ExcitationVoltage, ExcitationCurrent, and ExcitationPlanewave.
 func (n *NecppCtx) ExCard(extype int, i2 int, i3 int, i4 int, tmp1 float64, tmp2 float64, tmp3 float64, tmp4 float64, tmp5 float64, tmp6 float64) error {
@@ -412,20 +412,20 @@ func (n *NecppCtx) ExCard(extype int, i2 int, i3 int, i4 int, tmp1 float64, tmp2
 // It is one of the simpler versions of ExCard().
 //
 // Parameters:
-//	tag - Tag number of the source segment. This tag number along with the 
-// 	number to be given in (segment), which identifies the position of the 
-// 	segment in a set of equal tag numbers, uniquely definer the source 
-// 	segment. A zero in field (tag) implies that the Source segment will be 
-// 	identified by using the absolute segment number in the next field 
-// 	(segment). 
-//	segment - Equal to m, specifies the mth segment of the set of segments 
-// 	whose tag numbers are equal to the number 
-//	set by the previous parameter. If the previous parameter is zero, the 
-// 	number in (segment) must be the absolute segment number of the source. 
+//	tag - Tag number of the source segment. This tag number along with the
+// 	number to be given in (segment), which identifies the position of the
+// 	segment in a set of equal tag numbers, uniquely definer the source
+// 	segment. A zero in field (tag) implies that the Source segment will be
+// 	identified by using the absolute segment number in the next field
+// 	(segment).
+//	segment - Equal to m, specifies the mth segment of the set of segments
+// 	whose tag numbers are equal to the number
+//	set by the previous parameter. If the previous parameter is zero, the
+// 	number in (segment) must be the absolute segment number of the source.
 // 	voltageExcitation - a complex128 number representing the voltage
 // 	excitation.
 // Only one incident plane wave or one elementary current source is allowed at
-// a time. Also plane-wave or current-source excitation is not allowed with 
+// a time. Also plane-wave or current-source excitation is not allowed with
 // voltage sources.  If the excitation types are mixed, the program will use the
 // last excitation type encountered.
 func (n *NecppCtx) ExcitationVoltage(tag int, segment int, voltageExcitation complex128) error {
@@ -436,18 +436,18 @@ func (n *NecppCtx) ExcitationVoltage(tag int, segment int, voltageExcitation com
 // one of the simpler versions of ExCard().
 //
 // Parameters:
-//	x - X position in meters. 
-//	y - Y position in meters. 
-//	z - Z position in meters. 
-//	a - a in degrees. a is the angle the current source makes with the XY 
-// 	plane as illustrated on figure 15. 
-//	beta - beta in degrees. beta is the angle the projection of the current 
-// 	source on the XY plane makes with the X axis. 
-//	moment - "Current moment" of the source. This parameter is equal to the 
+//	x - X position in meters.
+//	y - Y position in meters.
+//	z - Z position in meters.
+//	a - a in degrees. a is the angle the current source makes with the XY
+// 	plane as illustrated on figure 15.
+//	beta - beta in degrees. beta is the angle the projection of the current
+// 	source on the XY plane makes with the X axis.
+//	moment - "Current moment" of the source. This parameter is equal to the
 // 	product Il in amp meters.
 //
 // Only one incident plane wave or one elementary current source is allowed at
-// a time. Also plane-wave or current-source excitation is not allowed with 
+// a time. Also plane-wave or current-source excitation is not allowed with
 // voltage sources.  If the excitation types are mixed, the program will use the
 // last excitation type encountered.
 func (n *NecppCtx) ExcitationCurrent(x float64, y float64, z float64, a float64, beta float64, moment float64) error {
@@ -458,21 +458,21 @@ func (n *NecppCtx) ExcitationCurrent(x float64, y float64, z float64, a float64,
 // is one of the simpler versions of ExCard().
 //
 // Parameters:
-//	nTheta - Number of theta angles desired for the incident plane wave . 
-//	nPhi - Number of phi angles desired for the incident plane wave. 
+//	nTheta - Number of theta angles desired for the incident plane wave .
+//	nPhi - Number of phi angles desired for the incident plane wave.
 //	theta - Theta in degrees. Theta 19 defined in standard spherical coordinates as illustrated
-//	phi - Phi in degrees. Phi is the standard spherical angle defined lned in the XY plane. 
+//	phi - Phi in degrees. Phi is the standard spherical angle defined lned in the XY plane.
 //	eta - Eta in degrees. Eta is the polarization angle defined as the angle
-// 	between the theta unit vector and the direction of the electric field 
-// 	for linear polarization or the major ellipse axis for elliptical 
-// 	polarization. 
-//	dTheta - Theta angle stepping increment in degrees. 
-//	dPhi - Phi angle stepping increment in degrees. 
-//	polRatio - Ratio of minor axis to major axis for elliptic polarization 
+// 	between the theta unit vector and the direction of the electric field
+// 	for linear polarization or the major ellipse axis for elliptical
+// 	polarization.
+//	dTheta - Theta angle stepping increment in degrees.
+//	dPhi - Phi angle stepping increment in degrees.
+//	polRatio - Ratio of minor axis to major axis for elliptic polarization
 // 	(major axis field strength - 1 V/m).
 //
 // Only one incident plane wave or one elementary current source is allowed at
-// a time. Also plane-wave or current-source excitation is not allowed with 
+// a time. Also plane-wave or current-source excitation is not allowed with
 // voltage sources.  If the excitation types are mixed, the program will use the
 // last excitation type encountered.
 func (n *NecppCtx) ExcitationPlanewave(nTheta int, nPhi int, theta float64, phi float64, eta float64, dTheta float64, dPhi float64, polRatio float64) error {
@@ -494,7 +494,7 @@ func (n *NecppCtx) NtCard(itmp1 int, itmp2 int, itmp3 int, itmp4 int, tmp1 float
 // radiation patterns in either of two vertical cuts.
 //
 // Parameter:
-// 	itmp1 - 
+// 	itmp1 -
 func (n *NecppCtx) XqCard(itmp1 ExecutionOption) error {
 	return n.errWrap(C.nec_xq_card(n.necContext, C.int(itmp1)))
 }
