@@ -23,7 +23,7 @@ Documentation
 
 • The user's manual for NEC2 at http://www.nec2.org/part_3/toc.html. This manual may make some of the more obscure portions of the documentation taken from nec++ more clear.
 
-The godocs for this package have brought over the documentation for libnecpp.h from nec++, adapted somewhat to fit the golang wrapper functions better. Some functions were not documented there, and have not been documented here yet either. The NEC2 user manual may shed light on what a particular method does and what values should be used with it.
+The godocs for this package have brought over the documentation for libnecpp.h from nec++, adapted somewhat to fit the golang wrapper functions better. Some functions were not documented there, and have not been documented here yet either. The NEC2 user manual may shed light on what a particular method does and what values should be used with it. As time permits, the missing method documentation from the NEC2 user manual will be added to the documentation here, and some of the variables will likely get more meaningful names as their functions become more clear.
 
 Being a Go wrapper around a C interface for a C++ rewrite of a C rewrite of a FORTRAN program, there's some weirdness and not entirely Go customs compliant bits creeping around.
 */
