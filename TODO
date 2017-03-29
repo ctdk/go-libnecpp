@@ -1,0 +1,3 @@
+* Improve documentation by referring to the NEC2 user manual for what different 
+  cards do, and make some of the more obscure variable names more clear.
+* Make installing nec++ on OS X more straightforward than it is now.
