@@ -119,6 +119,49 @@ const (
 	BothPlane
 )
 
+// wow, there are a lot of flags for RP cards. :-/
+
+type RpCalcMode int
+type RpOutputFormat int
+type RpNormalization int
+type RpGain int
+type RpAveraging int
+
+const (
+	Normal = RpCalcMode(iota)
+	SurfaceWave
+	LinearCliff
+	CircularCliff
+	RadialScreen
+	RadialLinearCliff
+	RadialCircularCliff
+)
+
+const (
+	MajorMinor = RpOutputFormat(iota)
+	VerticalHorizontal
+)
+
+const (
+	NoNormalization = RpNormalization(iota)
+	MajorAxisNorm
+	MinorAxisNorm
+	VerticalAxisNorm
+	HorizontalAxisNorm
+	TotalNormalized
+)
+
+const (
+	PowerGain = RpGain(iota)
+	DirectiveGain
+)
+
+const (
+	NoAvg = RpAveraging(iota)
+	AvgGain
+	AvgGainPrtSuppressed
+)
+
 // NecppCtx is the nec context, and contains the libnecpp nec_context struct
 // within itself.
 type NecppCtx struct {
@@ -494,7 +537,7 @@ func (n *NecppCtx) NtCard(itmp1 int, itmp2 int, itmp3 int, itmp4 int, tmp1 float
 // radiation patterns in either of two vertical cuts.
 //
 // Parameter:
-// 	itmp1 -
+// 	itmp1 - an ExecutionOption flag, per the ExecutionOption consts.
 func (n *NecppCtx) XqCard(itmp1 ExecutionOption) error {
 	return n.errWrap(C.nec_xq_card(n.necContext, C.int(itmp1)))
 }
@@ -506,7 +549,17 @@ func (n *NecppCtx) GdCard(tmp1 float64, tmp2 float64, tmp3 float64, tmp4 float64
 
 // simulation output
 
-func (n *NecppCtx) RpCard(calcMode int, nTheta int, nPhi int, outputFormat int, normalization int, d int, a int, theta0 float64, phi0 float64, deltaTheta float64, deltaPhi float64, radialDistance float64, gainNorm float64) error {
+// RpCard calculates the radiation patterns for the antenna.
+//
+// --- FILL IN ---
+//
+// The RpCard() method will cause the interaction matrix to be computed and factored and the structure currents to be computed if these operations have not already been performed. Hence, all required input parameters must be set before the RpCard() method is called. 
+//
+// At a single frequency, any number of RpCard() calls may occur in sequence so that different field-point spacings may be used over different regions of space. If automatic frequency stepping is being used (i.e., inNfrq on the FrCard() method is greater than one), only one RpCard() method will act as data inside the loop. Subsequent calls to RpCard() will calculate patterns at the final frequency. 
+// When both nTheta and nPhi are greater than one, the angle theta (or Z) will be stepped faster than phi. 
+//
+// When a ground plane has been specified, field points should not be requested below the ground (theta greater than 90 degrees or Z less than zero.)
+func (n *NecppCtx) RpCard(calcMode RpCalcMode, nTheta int, nPhi int, outputFormat RpOutputFormat, normalization RpNormalization, d RpGain, a RpAveraging, theta0 float64, phi0 float64, deltaTheta float64, deltaPhi float64, radialDistance float64, gainNorm float64) error {
 	return n.errWrap(C.nec_rp_card(n.necContext, C.int(calcMode), C.int(nTheta), C.int(nPhi), C.int(outputFormat), C.int(normalization), C.int(d), C.int(a), C.double(theta0), C.double(phi0), C.double(deltaTheta), C.double(deltaPhi), C.double(radialDistance), C.double(gainNorm)))
 }
 
