@@ -93,3 +93,15 @@ func roundFloat(n float64, d int) float64 {
 	p := math.Pow(10, float64(d))
 	return float64(int(n*float64(p))) / p
 }
+
+func TestCrossedWires(t *testing.T) {
+	n, _ := New()
+	defer n.Delete()
+	if err := n.Wire(4, 11, -0.0318, -0.0287, 0.0775, -0.0318, 0.0439, 0.014, 0.001, 1.0, 1.0); err != nil {
+		t.Errorf("This shouldn't have caused an error: %s", err.Error())
+	}
+	if err := n.Wire(5, 7, -0.0318, 0.0439, 0.014, -0.0318, 0.0045, 0.0624, 0.001, 1.0, 1.0); err == nil {
+		t.Errorf("The second wire *should* have caused an error because it crossed over the first wire, but didn't")
+	}
+
+}
