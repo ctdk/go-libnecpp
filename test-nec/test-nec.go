@@ -13,12 +13,79 @@ import (
 )
 
 func main() {
+	sevenWireAntenna()
 	simpleExample()
 	example3()
 }
 
 func sevenWireAntenna() {
+	n, err := necpp.New()
+	if err != nil {
+		panic(err)
+	}
+	defer n.Delete()
 
+	fmt.Println("seven^W six wire antenna example")
+	fmt.Println("--------------------------------")
+
+	if err := n.Wire(1, 9, 0.0, 0.0, 0.0, -0.0166, 0.0045, 0.0714, 0.001, 1.0, 1.0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+	if err := n.Wire(2, 7, -0.0166, 0.0045, 0.0714, -0.0318, -0.0166, 0.017, 0.001, 1.0, 1.0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+	if err := n.Wire(3, 7, -0.0318, -0.0166, 0.017, -0.0318, -0.0287, 0.0775, 0.001, 1.0, 1.0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+	if err := n.Wire(4, 11, -0.0318, -0.0287, 0.0775, -0.0318, 0.0439, 0.014, 0.001, 1.0, 1.0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+	/* if err := n.Wire(5, 7, -0.0318, 0.0439, 0.014, -0.0318, 0.0045, 0.0624, 0.001, 1.0, 1.0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	} */
+	if err := n.Wire(6, 5, -0.0318, 0.0045, 0.0624, -0.0106, 0.0378, 0.0866, 0.001, 1.0, 1.0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+	if err := n.Wire(7, 7, -0.0106, 0.0378, 0.0866, -0.0106, 0.0257, 0.023, 0.001, 1.0, 1.0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+
+	if err := n.GeometryComplete(necpp.CurrentExpansionModified); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+
+	if err := n.GnCard(necpp.Perfect, 0, 0, 0, 0, 0, 0, 0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+	if err := n.FrCard(necpp.Linear, 1, 1600.0, 0.0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+	if err := n.ExCard(necpp.VoltageApplied, 1, 1,  0,  1.0,  0.0,  0.0,  0.0,  0.0,  0.0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+	if err := n.RpCard(necpp.Normal, 17, 45, necpp.MajorMinor, necpp.TotalNormalized, necpp.PowerGain, necpp.NoAvg, 0, 0, 5, 8, 0, 0); err != nil {
+		fmt.Printf("error: %s\n", err.Error())
+	}
+
+	imp, ierr := n.Impedance(0)
+	if ierr != nil {
+		fmt.Printf("error: %s\n", ierr.Error())
+	}
+	fmt.Printf("Impedance: %g\n", imp)
+	max, _ := n.GainMax(0)
+	mean, _ := n.GainMean(0)
+	sd, _ := n.GainSd(0)
+	fmt.Printf("Gain: %f, %f +/- %f dB\n", max, mean, sd)
+
+	maxR, _ := n.GainRhcpMax(0)
+	meanR, _ := n.GainRhcpMean(0)
+	sdR, _ := n.GainRhcpSd(0)
+	fmt.Printf("RHCP Gain: %f, %f +/- %f dB\n", maxR, meanR, sdR)
+
+	maxL, _ := n.GainLhcpMax(0)
+	meanL, _ := n.GainLhcpMean(0)
+	sdL, _ := n.GainLhcpSd(0)
+	fmt.Printf("LHCP Gain: %f, %f +/- %f dB\n\n", maxL, meanL, sdL)
 }
 
 func simpleExample() {
