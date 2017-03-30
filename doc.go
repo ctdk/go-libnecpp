@@ -13,6 +13,32 @@ This package should be able to build on Windows, assuming you've been able to bu
 
 After that's installed, go-libnecpp can be installed with the usual 'go get'.
 
+Groups of Methods
+
+The methods in this library can be grouped into a few general groups - antenna geometry, antenna environment, simulation output, output analysis, and initialization/cleanup type methods. While they are grouped together in the source, godoc rearranges them into alphabetical order.
+
+The groupings of methods in this library are:
+
+Initialization and Cleanup
+
+New(), Delete()
+
+Antenna Geometry
+
+Wire(), SpCard(), ScCard(), GmCard(), GxCard(), GeometryComplete()
+
+Antenna Environment
+
+MediumParameters(), GnCard(), FrCard(), EkCard(), LdCard(), ExCard(), ExcitationVoltage(), ExcitationCurrent(), ExcitationPlanewave(), TlCard(), NtCard(), XqCard(), GdCard()
+
+Simulation Output
+
+RpCard(), PtCard(), PqCard(), KhCard(), NeCard(), NhCard(), CpCard(), PlCard()
+
+Output Analysis
+
+Gain(), GainMax(), GainMin(), GainMean(), GainRhcpMax(), GainRhcpMin(), GainRhcpMean(), GainRhcpSd(), GainLhcpMax(), GainLhcpMin(), GainLhcpMean(), GainLhcpSd()
+
 Documentation
 
 • nec++'s github page can be found at https://github.com/tmolteno/necpp/.
