@@ -162,7 +162,7 @@ func example3() {
 
 	n.Wire(0, 9, 0., 0.0, 2.0, 0.0, 0.0, 7.0, 0.03, 1.0, 1.0)
 	n.GeometryComplete(necpp.CurrentExpansionModified)
-	n.EkCard(necpp.ReturnToNormal)
+	n.EkCard(necpp.ExtendedThinWire)
 	n.FrCard(necpp.Linear, 1, 30.0, 0)
 	n.ExCard(necpp.VoltageApplied, 0, 5, 0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0)
 	n.GnCard(necpp.Perfect, 0, 0, 0, 0, 0, 0, 0)
