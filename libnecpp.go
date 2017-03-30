@@ -18,12 +18,11 @@ const GainErrno float64 = -999.0
 
 var ErrNoPatternRequested = errors.New("no radiation pattern previously requested")
 
-// PatchType is the type of patch for the SP card.
+// PatchType is the shape of a patch for the Surface Patch (SP Card).
 type PatchType int
 
-// Patch shapes for Surface Patch (SP Card)
 const (
-	Arbitrary = PatchType(iota) // an arbitrary patch shape (the default)
+	Arbitrary PatchType = iota // an arbitrary patch shape (the default)
 	Rectangular
 	Triangular
 	Quadrilateral
@@ -31,9 +30,8 @@ const (
 
 // GeoGroundPlaneFlag is used to indicate the type of ground plane to use with
 // the antenna when indicating the geometry is complete.
-type GeoGroundPlaneFlag int
-
-// Indicate the type of ground plane to use. The options are:
+//
+// The types of ground plane to use are:
 //
 // • NoGroundPlane - no ground plane is present. (Fairly self-explanatory.)
 //
@@ -46,16 +44,18 @@ type GeoGroundPlaneFlag int
 // symmetry is modified as required. Current expansion, however, is not
 // modified, Thus, currents on segments touching the ground will go to zero at
 // the ground.
+type GeoGroundPlaneFlag int
+
 const (
-	CurrentExpansionUnmodified = GeoGroundPlaneFlag(iota - 1)
+	CurrentExpansionUnmodified GeoGroundPlaneFlag = iota - 1
 	NoGroundPlane
 	CurrentExpansionModified
+	MooMoo
 )
 
 // GroundTypeFlag indicates the general type of ground for the antenna.
-type GroundTypeFlag int
-
-// Flags for GnCard ground types.
+//
+// The flags for ground types are:
 //
 // • Nullified - Nullifies ground parameters previously used and sets free-space
 // condition. The remainder of the parameters are ignored in this case.
@@ -65,8 +65,10 @@ type GroundTypeFlag int
 // • Perfect - Perfectly conducting ground.
 //
 // • FiniteSomNorton - Finite ground, Sommerfeld/Norton method.
+type GroundTypeFlag int
+
 const (
-	Nullified = GroundTypeFlag(iota - 1)
+	Nullified GroundTypeFlag = iota - 1
 	Finite
 	Perfect
 	FiniteSomNorton
@@ -75,19 +77,20 @@ const (
 // FrequencyRange is used to set the type of frequency range for FR cards.
 type FrequencyRange int
 
-// FrequencyRanges for FrCard.
 const (
-	Linear      = FrequencyRange(iota) // a linear range
-	Logarithmic                        // a logarithmic range
+	Linear      FrequencyRange = iota // a linear range
+	Logarithmic                       // a logarithmic range
 )
 
 // WireKernel sets the type of wire kernel to use with EkCard
+//
+// • ReturnToNormal - Return to normal kernel
+//
+// • ExtendedThinWire - Use extended thin wire kernel
 type WireKernel int
 
-// ReturnToNormal - Return to normal kernel
-// ExtendedThinWire - Use extended thin wire kernel
 const (
-	ReturnToNormal = WireKernel(iota - 1)
+	ReturnToNormal WireKernel = iota - 1
 	ExtendedThinWire
 )
 

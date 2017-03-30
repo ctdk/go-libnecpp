@@ -60,7 +60,7 @@ func sevenWireAntenna() {
 	if err := n.FrCard(necpp.Linear, 1, 1600.0, 0.0); err != nil {
 		fmt.Printf("error: %s\n", err.Error())
 	}
-	if err := n.ExCard(necpp.VoltageApplied, 1, 1,  0,  1.0,  0.0,  0.0,  0.0,  0.0,  0.0); err != nil {
+	if err := n.ExCard(necpp.VoltageApplied, 1, 1, 0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0); err != nil {
 		fmt.Printf("error: %s\n", err.Error())
 	}
 	if err := n.RpCard(necpp.Normal, 17, 45, necpp.MajorMinor, necpp.TotalNormalized, necpp.PowerGain, necpp.NoAvg, 0, 0, 5, 8, 0, 0); err != nil {
