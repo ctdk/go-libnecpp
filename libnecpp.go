@@ -518,8 +518,8 @@ func (n *NecppCtx) LdCard(ldtype int, ldtag int, ldtagf int, ldtagt int, tmp1 fl
 // 	segment number of the source.
 // 	i4 -  Meaning Depends on the extype parameter. See http://www.nec2.org/part_3/cards/ex.html
 //
-// 	The meaning of the floating point parameter depends on the excitation
-// type. See http://www.nec2.org/part_3/cards/ex.html for more details.
+// The meaning of the floating point parameter depends on the excitation type.
+// See http://www.nec2.org/part_3/cards/ex.html for more details.
 //
 // Simpler versions of the function are provided for common uses. These are
 // ExcitationVoltage, ExcitationCurrent, and ExcitationPlanewave.
