@@ -1,6 +1,8 @@
 go-libnecpp
 ===========
 
+[![GoDoc](https://godoc.org/github.com/ctdk/go-libnecpp?status.svg)](https://godoc.org/github.com/ctdk/go-libnecpp)
+
 A Go wrapper around libnecpp, which is a C library for 
 nec++, which is a C++ rewrite of nec2c, which is itself a C rewrite/translation
 of the original FORTRAN code for NEC2, an antenna modelling package.
@@ -17,7 +19,7 @@ This package should be able to build on Windows, assuming you've been able to bu
 Documentation
 -------------
 
-See the godocs for more detailed documentation for go-libnecpp.
+See the [godocs](https://godoc.org/github.com/ctdk/go-libnecpp) for more detailed documentation for go-libnecpp.
 
 Also very relevant:
 
