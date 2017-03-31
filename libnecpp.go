@@ -443,10 +443,7 @@ func (n *NecppCtx) MediumParameters(permittivity float64, permeability float64) 
 // 1) Infinite ground plane
 // 	n.GnCard(Perfect, 0, 0, 0, 0, 0, 0, 0)
 // 2) Radial Wire Ground Plane (4 wires, 2 meters long, 5mm in radius)
-// (This is the example I'm unsure of)
 // 	n.GnCard(Perfect, 4, 0.0, 0.0, 2.0, 0.005, 0.0, 0.0)
-// 	(example from libnecpp was nec_gn_card(nec, 4, 0, 0.0, 0.0, 2.0, 0.005,
-// 	 0.0, 0.0))
 //
 // Parameters (some - not all were detailed in the upstream documentation)
 //
